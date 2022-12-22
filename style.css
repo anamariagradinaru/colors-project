@@ -18,15 +18,15 @@ svg {
 .colors {
     min-height: 80vh;
     display: flex;
-    color: rgb(212.212.212);
+    color: rgb(212, 212, 212);
 }
 .color {
     height: 80vh;
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    flex: 1;
     position: relative;
 }
 .color h2 {
@@ -38,18 +38,19 @@ svg {
     flex-direction: column;
     position: absolute;
     bottom: 0%;
-    background: rgb(198, 171, 171);
-    opacity: 0;
+    background: rgb(255, 255, 255);
+    /* opacity: 0; */
     padding: 1rem;
     width: 80%;
     border-top-right-radius: 1rem;
     border-top-left-radius: 1rem;
+    /* pointer-events: none; */
     /*We are adding an adjustement class */
-    transform: translateY(100px);
+    /* transform: translateY(100px); */
     transition: all 0.5s ease-in-out;
 }
 .sliders.active {
-    opacity: 0;
+    opacity: 1;
     transform: translateY(0px);
     pointer-events: all;
 }
@@ -57,8 +58,8 @@ svg {
     position: absolute;
     top: 0;
     right: 0;
-    padding: 0 5rem;
-    border-top-right-radius: 1rem;
+    padding: 0.5rem;
+    border-top-left-radius: 1rem;
     border-bottom-left-radius: 1rem;
     border: none;
     background: rgb(73, 73, 73);
@@ -103,4 +104,14 @@ svg {
     background: none;
     cursor: pointer;
     margin: 2rem 0rem;
+}
+/* Sliders stuff*/
+input [type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 1rem 0rem;
+    width: 100%;
+    position: relative;
+    border-radius: 1rem;
+    cursor: pointer;
 }
