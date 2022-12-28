@@ -3,6 +3,7 @@ const colorDivs = document.querySelectorAll('.color');
 const generateBtn = document.querySelector('.generate');
 const sliders = document.querySelectorAll('input[type="range"]');
 const currentHexes = document.querySelectorAll('.color h2');
+const popup = document.querySelector('.copy-container');
 let initialColors;
 
 //add out events listereners
@@ -15,7 +16,16 @@ colorDivs.forEach((div, index) => {
         updateTextUI(index);
     });
 });
-
+currentHexes.forEach((hex) => {
+    hex.addEventListener('click', () => {
+        copyToClipboard(hex);
+    });
+});
+popup.addEventListener('transitionend', () => {
+    const popupBox = popup.children[0];
+    popup.classList.remove('active');
+    popupBox.classList.remove('active');
+});
 //functions
 
 //Color Generator
@@ -90,7 +100,7 @@ function hslControls(e) {
     let sliders = e.target.parentElement.querySelectorAll(
         'input[type="range"]'
     );
-    console.log(sliders);
+
     const hue = sliders[0];
     const brightness = sliders[1];
     const saturation = sliders[2];
@@ -102,6 +112,8 @@ function hslControls(e) {
         .set('hsl.l', brightness.value)
         .set('hsl.h', hue.value);
     colorDivs[index].style.backgroundColor = color;
+    //Colorize Inputs
+    colorizeSliders(color, hue, brightness, saturation);
 }
 function updateTextUI(index) {
     const activeDiv = colorDivs[index];
@@ -133,9 +145,21 @@ function resetInputs() {
         if (slider.name === 'saturation') {
             const satColor = initialColors[slider.getAttribute('data-sat')];
             const satValue = chroma(satColor).hsl()[1];
-            slider.value = Math.floor(satValue);
+            slider.value = Math.floor(satValue * 100) / 100;
         }
     });
+}
+function copyToClipboard(hex) {
+    const el = document.createElement('textarea');
+    el.value = hex.innerText;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    //Popup Animation
+    const popupBox = popup.children[0];
+    popup.classList.add('active');
+    popupBox.classList.add('active');
 }
 
 randomColors();
