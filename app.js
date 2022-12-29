@@ -7,13 +7,17 @@ const popup = document.querySelector('.copy-container');
 const adjustButton = document.querySelectorAll('.adjust');
 const closeAdjustement = document.querySelectorAll('.close-adjustement');
 const sliderContainers = document.querySelectorAll('.sliders');
+const lockButton = document.querySelectorAll('.lock');
 let initialColors;
 
-//add out events listereners
+//this is for local storage
+let savedPalettes = [];
+
+//Add out events listereners
+generateBtn.addEventListener('click', randomColors);
 sliders.forEach((slider) => {
     slider.addEventListener('input', hslControls);
 });
-
 colorDivs.forEach((div, index) => {
     div.addEventListener('change', () => {
         updateTextUI(index);
@@ -39,6 +43,7 @@ closeAdjustement.forEach((button, index) => {
         closeAdjustementPanel(index);
     });
 });
+
 //functions
 
 //Color Generator
@@ -47,18 +52,19 @@ function generateHex() {
     const hexColor = chroma.random();
     return hexColor;
 }
-
 function randomColors() {
-    //
     initialColors = [];
     colorDivs.forEach((div, index) => {
         const hexText = div.children[0];
         const randomColor = generateHex(); //#34BE54
 
         //Add it to an array
-
-        initialColors.push(chroma(randomColor).hex());
-
+        if (div.classList.contains('locked')) {
+            initialColors.push(hexText.innerText);
+            return;
+        } else {
+            initialColors.push(chroma(randomColor).hex());
+        }
         //Add the color to the background
         div.style.backgroundColor = randomColor;
         hexText.innerText = randomColor;
@@ -76,6 +82,11 @@ function randomColors() {
 
     //Reset Inputs
     resetInputs();
+    //Check For Button Contrast
+    adjustButton.forEach((button, index) => {
+        checkTextContrast(initialColors[index], button);
+        checkTextContrast(initialColors[index], lockButton[index]);
+    });
 }
 function checkTextContrast(color, text) {
     const luminance = chroma(color).luminance();
@@ -180,4 +191,26 @@ function openAdjustementPanel(index) {
 function closeAdjustementPanel(index) {
     sliderContainers[index].classList.remove('active');
 }
+
+//implement save to palette and local storage stuff
+const saveBtn = document.querySelector('.save');
+const submitSave = document.querySelector('.submit-save');
+const closeSave = document.querySelector('.close-save');
+const saveContainer = document.querySelector('.save-container');
+const saveInput = document.querySelector('.save-container input');
+
+//event listener
+saveBtn.addEventListener('click', openPalette);
+closeSave.addEventListener('click', closePalette);
+function openPalette(e) {
+    const popup = saveContainer.children[0];
+    saveContainer.classList.add('active');
+    popup.classList.add('active');
+}
+function closePalette(e) {
+    const popup = saveContainer.children[0];
+    saveContainer.classList.remove('active');
+    popup.classList.add('remove');
+}
+
 randomColors();
