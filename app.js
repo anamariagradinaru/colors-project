@@ -43,6 +43,11 @@ closeAdjustement.forEach((button, index) => {
         closeAdjustementPanel(index);
     });
 });
+lockButton.forEach((button, index) => {
+    button.addEventListener('click', (e) => {
+        lockButton(index);
+    });
+});
 
 //functions
 
@@ -259,8 +264,14 @@ function savePalette(e) {
         closeLibrary();
         const paletteIndex = e.target.classList[1];
         initialColors = [];
-        savedPalettes[paletteIndex].colors;
-        
+        savedPalettes[paletteIndex].colors.forEach((color, index) => {
+            initialColors.push(color);
+            colorDivs[index].style.backgroundColor = color;
+            const text = colorDivs[index].children[0];
+            checkTextContrast(color, text);
+            updateTextUI(index);
+        });
+        libraryInputUpdate();
     });
 
     //Append to Library
@@ -291,4 +302,5 @@ function closeLibrary() {
     libraryContainer.classList.remove('active');
     popup.classList.remove('active');
 }
+
 randomColors();
